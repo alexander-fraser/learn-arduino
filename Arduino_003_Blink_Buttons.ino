@@ -12,10 +12,8 @@
     - Connect the other side of the other button to digital pin 3.
 */
 
-int buttonPin1 = 2;
-int buttonPin2 = 3;
-int ledPin = 13;
-int button1State, button2State;
+int ledPin = 13, onButtonPin = 2, offButtonPin = 3;
+int ledState = HIGH, onButtonState, offButtonState;
 
 void setup() {
   // Initialize the pins for the button inputs and LED output.
@@ -23,27 +21,24 @@ void setup() {
   // when the button is not depressed (i.e. connected to GND).
   // Otherwise it will float.
   pinMode(ledPin, OUTPUT);
-  pinMode(buttonPin1, INPUT_PULLUP);
-  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(onButtonPin, INPUT_PULLUP);
+  pinMode(offButtonPin, INPUT_PULLUP);
   Serial.begin(9600);
 }
 
-void loop() { 
+void loop() {
   // Collect whether the buttons are pressed and print the state.
-  button1State = digitalRead(buttonPin1);
-  button2State = digitalRead(buttonPin2);
+  onButtonState = digitalRead(onButtonPin);
+  offButtonState = digitalRead(offButtonPin);
 
-  Serial.print(button1State);
-  Serial.print(",");
-  Serial.print(button2State);
-  Serial.println("");
+  Serial.println(String(onButtonState) + "," + String(offButtonState));
 
-  // Turn the LED on when button 1 is pressed and off when 
-  // button 2 is pressed. 
-  if(button1State==LOW) {
-    digitalWrite(ledPin, HIGH); 
+  if(onButtonState == LOW){
+    ledState = HIGH;
   }
-  if(button2State==LOW) {
-    digitalWrite(ledPin, LOW); 
+  if(offButtonState == LOW){
+    ledState = LOW;
   }
+
+  digitalWrite(ledPin, ledState);
 }
