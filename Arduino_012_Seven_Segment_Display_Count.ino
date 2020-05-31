@@ -69,39 +69,17 @@ void setup(){                     // Shift register pinout labels in datasheet:
   // Set the brightness of the display.
   analogWrite(overridePin, 255 - ledBrightness);
 
-  Serial.begin(9600);
-  delay(500);
-  Serial.println("Enter a number from 0 to 9. Enter a ./, for decimal on/off.");
 }
 
 void loop() {
-  // Asks for the user to give it a digit, which it then displays.
-  if(Serial.available() > 0){
 
-    // Collect the user input.
-    byte inputByte = Serial.read();
-    Serial.print(inputByte);
-
-    // Turn on/off the decimal if user enters ./,
-    if(inputByte == 46){
-      decimalIndicator = true;
-    }
-    if (inputByte == 44){
-      decimalIndicator = false;
-    }
-
-    // Convert the byte to an integer and check if it is within limits.
-    byte digitByte = inputByte - '0';    
-    if(digitByte >= 0 && digitByte <= 9){
-      Serial.print(",");
-      Serial.print(digitByte);
-      byte outputByte = getByteCode(digitByte, decimalIndicator);
-      sevenSegWrite(outputByte);
-    }
-
-    Serial.println(",");
-
-  }  
+  // Loops through all digits from 0-9.
+  for(int x; x<10; x++){
+    byte outputByte = getByteCode(x, decimalIndicator);
+    sevenSegWrite(outputByte);
+    delay(500);
+  }
+  
 }
 
 void sevenSegWrite(byte displayDigits) {
@@ -111,13 +89,9 @@ void sevenSegWrite(byte displayDigits) {
   shiftOut(dataPin, clockPin, LSBFIRST, displayDigits);   // See "Arduino_010 sketch for a breakout of the shiftOut function".
   digitalWrite(latchPin, HIGH);
 
-  // Print the bytecode for the display pinout.
-  Serial.print(",");
-  Serial.print(displayDigits, BIN);
-
 }
 
-byte getByteCode(byte digit, boolean decimalIndicator){
+byte getByteCode(int digit, boolean decimalIndicator){
 
   // Look up the bytecode corresponding to the digit from the table.
   byte displayDigits = seven_seg_digits[digit];
