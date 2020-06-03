@@ -1,11 +1,10 @@
 /*
-  Display
+  Four Digit Display
   Alexander Fraser
   2 June 2020
   
   Uses a SN74HC595 shift register to control a foud-digit seven-segment 
-  display. There are several functions in the loop function that can be called,
-  including one that counts up from 0 to 9999 and repeats.
+  display. Displays the four integers specified in the loop function.
 
   The display has four sets of seven LEDs that light up to display the 
   numeric digits 0-9. They each have an eighth LED for a decimal.
@@ -89,27 +88,28 @@ void setup(){                       // Shift register pinout labels in datasheet
 void loop() {
 
   // Lights every segment in the display.
-//  writeSameDigit(0xff);   
+//  writeSameDigit(8);   
 
   // Displays four digits, based on the input passed (in HEX).
-  unsigned char digits[] = {0x1e, 0x5d, 0xcd, 0x14};
+  int digits[] = {1, 2, 3, 4};
   writeFourDigits(digits);
 
 }
 
-void writeSameDigit(unsigned char digit){
+void writeSameDigit(int reference){
   // Takes a single byte passed to it (in HEX) and displays it for all digits.
-
+  unsigned char digit = digits_hex[reference];
   sevenSegWrite(digit);
   for(int x = 0; x < 4; x++){
     digitalWrite(displayPin[x], LOW); 
   }
 }
 
-void writeFourDigits(unsigned char digits[]){
+void writeFourDigits(int digits[]){
   // Takes an array of four bytes passed to it (in HEX) and displays them.
   for(int x = 0; x < 4; x++){
-    sevenSegWrite(digits[x]);
+    unsigned char digit = digits_hex[digits[x]];
+    sevenSegWrite(digit);
     digitalWrite(displayPin[x], LOW);
     delay(5);
     digitalWrite(displayPin[x], HIGH);
@@ -121,10 +121,4 @@ void sevenSegWrite(byte displayDigits) {
   digitalWrite(latchPin, LOW);
   shiftOut(dataPin, clockPin, LSBFIRST, displayDigits);   // See "Arduino_010 sketch for a breakout of the shiftOut function".
   digitalWrite(latchPin, HIGH);
-}
-
-byte getByteCode(int digit){
-  // Look up the bytecode corresponding to the digit from the table.
-  byte displayDigits = seven_seg_digits[digit];
-  return displayDigits;
 }
