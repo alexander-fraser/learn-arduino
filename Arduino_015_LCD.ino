@@ -1,5 +1,5 @@
 /*
-  LCD Display
+  LCD
   Alexander Fraser
   2 August 2020
   
@@ -24,13 +24,14 @@
         - 16     K      -> Connect to GND using a 220 ohm current-limiting resistor (powers the backlight).
 */
 
-#include <LiquidCrystal.h>   // include the library code
+#include <LiquidCrystal.h> 
 
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);  // initialize the library with the numbers of the interface pins
+// initialize the library with the numbers of the interface pins.
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);  
 
 void setup() {
   lcd.begin(16, 2);             // Set up the LCD's number of columns and rows. 
-  lcd.print("Hello World!");   // Print a message to the LCD.
+  lcd.print("Hello World!");    // Print a message to the LCD.
 }
 
 void loop() {
